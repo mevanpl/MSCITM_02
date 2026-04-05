@@ -8,7 +8,7 @@
   📌 CB018434  
   📧 CB018434@students.apiit.lk  
 
-- 👩‍💻 **Pavani Ratnayake**  
+- 👩‍💻 **Pavani Rathnayake**  
   📌 CB018372  
   📧 CB018372@students.apiit.lk  
 
