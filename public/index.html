@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shelton Tool Hire</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="site-brand">Shelton Tool Hire</div>
+    <p>Search tools, compare hire costs, and read moderated reviews.</p>
+  </header>
+  <main>
+    <section class="search-panel">
+      <input id="searchInput" type="search" placeholder="Search equipment or category..." />
+      <select id="categoryFilter">
+        <option value="">All categories</option>
+      </select>
+      <button id="searchButton">Search</button>
+    </section>
+    <section id="toolList" class="tool-list"></section>
+    <section id="toolDetail" class="tool-detail hidden"></section>
+  </main>
+  <footer>
+    <a href="admin.html">Back-end Admin Portal</a>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

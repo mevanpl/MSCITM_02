@@ -1,0 +1,73 @@
+{
+  "categories": [
+    "Building & Construction",
+    "Cleaning",
+    "Decorating",
+    "Landscaping",
+    "Electrical & Heating",
+    "Plumbing"
+  ],
+  "tools": [
+    {
+      "id": "tool-001",
+      "name": "Diesel Site Generator",
+      "category": "Building & Construction",
+      "description": "Reliable power for site tools, events, and temporary construction power needs.",
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
+      "rateHourly": 12.5,
+      "rateDaily": 95,
+      "rateWeekly": 520,
+      "reviews": [
+        {
+          "id": "review-001",
+          "author": "Claire P.",
+          "title": "Solid generator and clear handover",
+          "body": "The generator performed very well and the support team explained safe operation clearly.",
+          "performance": 5,
+          "customerService": 4,
+          "supportServices": 4,
+          "afterSales": 3,
+          "miscellaneous": 4,
+          "overallRating": 4.0,
+          "approved": true,
+          "submittedAt": "2026-03-26T09:13:00Z",
+          "comments": [],
+          "companyResponse": null
+        }
+      ]
+    },
+    {
+      "id": "tool-002",
+      "name": "Electric Floor Scrubber",
+      "category": "Cleaning",
+      "description": "High-capacity floor cleaning machine with easy controls for retail and industrial sites.",
+      "image": "https://images.unsplash.com/photo-1591014656680-b4d4d1b1b7b9?auto=format&fit=crop&w=800&q=80",
+      "rateHourly": 9,
+      "rateDaily": 70,
+      "rateWeekly": 380,
+      "reviews": []
+    },
+    {
+      "id": "tool-003",
+      "name": "Paint Sprayer Kit",
+      "category": "Decorating",
+      "description": "Versatile paint sprayer for interior and exterior decorating projects.",
+      "image": "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80",
+      "rateHourly": 6,
+      "rateDaily": 45,
+      "rateWeekly": 240,
+      "reviews": []
+    },
+    {
+      "id": "tool-004",
+      "name": "Petrol Lawn Mower",
+      "category": "Landscaping",
+      "description": "Heavy-duty mower for lawns and grounds maintenance.",
+      "image": "https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?auto=format&fit=crop&w=800&q=80",
+      "rateHourly": 10,
+      "rateDaily": 80,
+      "rateWeekly": 430,
+      "reviews": []
+    }
+  ]
+}

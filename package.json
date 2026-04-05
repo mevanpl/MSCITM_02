@@ -1,0 +1,23 @@
+{
+  "name": "shelton-tool-hire",
+  "version": "1.0.0",
+  "description": "Prototype review portal and rental calculator for Shelton Tool-Hire.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}

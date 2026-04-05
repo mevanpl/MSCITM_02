@@ -1,0 +1,165 @@
+:root {
+  font-family: Arial, sans-serif;
+  color: #222;
+  background: #f3f5f7;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+header, footer {
+  padding: 20px;
+  background: #0f4c81;
+  color: white;
+  text-align: center;
+}
+
+header .site-brand {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-panel {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.search-panel input,
+.search-panel select,
+.search-panel button,
+.review-form input,
+.review-form textarea,
+.review-form label input {
+  font-size: 1rem;
+}
+
+.search-panel input,
+.search-panel select,
+.review-form input,
+.review-form textarea,
+.review-form label input {
+  padding: 10px;
+  border: 1px solid #ccd4db;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-panel button,
+.review-form button,
+.approveReview,
+.editTool,
+#closeDetail {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #1f78b4;
+  color: white;
+  cursor: pointer;
+}
+
+.tool-list,
+.tool-admin-list,
+.pending-review {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.tool-card,
+.detail-card,
+.pending-review {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.tool-card img,
+.detail-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.tool-summary,
+.detail-content {
+  padding: 18px;
+}
+
+.detail-card {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.detail-content h2 {
+  margin-top: 0;
+}
+
+.calculator,
+.review-form,
+.review-list {
+  margin-top: 20px;
+}
+
+.review-form textarea {
+  min-height: 100px;
+}
+
+.rating-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rating-row label {
+  flex: 1 1 140px;
+}
+
+.hidden {
+  display: none;
+}
+
+.empty-state {
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.company-response,
+.review-comments {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f5f8fb;
+  border-radius: 8px;
+}
+
+.admin-panel {
+  margin-bottom: 30px;
+}
+
+.pending-review,
+.tool-card {
+  padding: 0;
+}
+
+.pending-review h3,
+.tool-card h3 {
+  margin-top: 0;
+}
+
+footer a {
+  color: #ffd966;
+  text-decoration: none;
+}
