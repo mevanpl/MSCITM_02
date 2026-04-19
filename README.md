@@ -23,5 +23,5 @@
 
 - 👨‍💻 **Kavindi Madara Wijesinghe**  
   📌 CB017893  
-  📧 CB017893  @students.apiit.lk
+  📧 CB017893@students.apiit.lk
   🎯 Role:
