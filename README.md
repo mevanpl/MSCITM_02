@@ -42,6 +42,22 @@ Make sure the following are installed before running the project:
 - Node.js
 - NPM
 
+##  Running the Application
+
+### Start Backend API
+
+```bash
+npm.cmd run api
+```
+
+### Start Frontend Application
+
+Open another terminal and run:
+
+```bash
+npm.cmd run dev
+```
+
 ##  Team
 
 - 👨‍💻 **Mevan Liyanage**  
