@@ -1,16 +1,71 @@
-# React + Vite
+# Shelton Catalogue System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack catalogue management system with a public catalogue interface, admin panel, and backend API.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📦 Project Overview
 
-## React Compiler
+This project includes:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Public Catalogue Website
+- Admin Dashboard
+- Backend API
+- Swagger API Documentation
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+##  Application URLs
+
+| Module | URL |
+|---|---|
+| Public Catalogue | http://127.0.0.1:5173/ |
+| Admin Login | http://127.0.0.1:5173/admin/login |
+| Admin Panel | http://127.0.0.1:5173/admin |
+| API Documentation | http://localhost:3001/api-docs |
+
+---
+
+##  Admin Credentials
+
+| Field | Value |
+|---|---|
+| Username | `admin@shelton.lk` |
+| Password | `Shelton@123` |
+
+---
+
+##  Prerequisites
+
+Make sure the following are installed before running the project:
+
+- Node.js
+- NPM
+
+##  Team
+
+- 👨‍💻 **Mevan Liyanage**  
+  📌 CB018566  
+  📧 CB018566@students.apiit.lk
+  🎯 Role:
+
+
+- 👩‍💻 **Oshini Silva**  
+  📌 CB018434  
+  📧 CB018434@students.apiit.lk
+  🎯 Role:
+
+- 👩‍💻 **Pavani Rathnayake**  
+  📌 CB018372  
+  📧 CB018372@students.apiit.lk
+  🎯 Role: 
+
+- 👨‍💻 **Viraj Weerasooriya**  
+  📌 CB015778  
+  📧 CB015778@students.apiit.lk
+  🎯 Role:
+
+- 👨‍💻 **Kavindi Madara Wijesinghe**  
+  📌 CB017893  
+  📧 CB017893@students.apiit.lk
+  🎯 Role:
