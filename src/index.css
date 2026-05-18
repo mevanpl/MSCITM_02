@@ -1,19 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap");
+
 :root {
-  --bg: #f6f7fb;
+  --bg: #f8fafc;
   --panel: #ffffff;
-  --panel-soft: #f9fafc;
-  --text: #596174;
-  --text-strong: #121826;
-  --border: #e4e8f0;
-  --accent: #2f6fed;
-  --accent-soft: #edf4ff;
+  --panel-soft: #fbfcfe;
+  --text: #667085;
+  --text-strong: #1f2937;
+  --border: #e5eaf2;
+  --accent: #3f6fa6;
+  --accent-soft: #eef5ff;
   --danger-soft: #fff0f0;
-  --shadow: 0 16px 40px rgba(17, 24, 39, 0.08);
-  --sans: Inter, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --shadow: 0 16px 40px rgba(31, 41, 55, 0.06);
+  --sans: "Work Sans", "Rethink Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   color: var(--text);
   background: var(--bg);
   font: 16px/1.45 var(--sans);
+  font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -25,6 +28,7 @@ body {
   min-width: 320px;
   background: var(--bg);
   font-family: var(--sans);
+  color: var(--text);
 }
 
 #root {
@@ -35,6 +39,7 @@ body {
 h1,
 h2 {
   color: var(--text-strong);
+  font-weight: 500;
 }
 
 h1 {
@@ -55,6 +60,7 @@ input,
 select,
 textarea {
   font: inherit;
+  letter-spacing: 0;
 }
 
 code {

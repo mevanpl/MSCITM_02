@@ -79,7 +79,7 @@ function Badge({ children }) {
         borderRadius: 12,
         color: "#2c3e50",
         fontSize: 11,
-        fontWeight: 700,
+        fontWeight: 500,
         letterSpacing: "0.5px",
         padding: "2px 8px",
         textTransform: "uppercase",
@@ -121,16 +121,16 @@ function ToolCard({ tool, categories, reviews, onSelect }) {
       </div>
       <div style={{ padding: "14px 16px 16px" }}>
         <div style={{ marginBottom: 6 }}><Badge>{cat?.label}</Badge></div>
-        <div style={{ color: "#1a1a2e", fontSize: 15, fontWeight: 800, marginBottom: 4 }}>{tool.name}</div>
+        <div style={{ color: "#1f2937", fontSize: 15, fontWeight: 500, marginBottom: 4 }}>{tool.name}</div>
         <div style={{ color: "#777", fontSize: 12, marginBottom: 10 }}>{tool.brand}</div>
         <div style={{ alignItems: "center", display: "flex", gap: 6, marginBottom: 12 }}>
           {avg ? (
             <>
               <Stars rating={avg} />
-              <span style={{ color: "#888", fontSize: 12 }}>({reviewCount})</span>
+              <span style={{ color: "#8a94a6", fontSize: 12 }}>({reviewCount})</span>
             </>
           ) : (
-            <span style={{ color: "#aaa", fontSize: 12 }}>No reviews yet</span>
+            <span style={{ color: "#a0a8b5", fontSize: 12 }}>No reviews yet</span>
           )}
         </div>
         <div style={{ display: "grid", gap: 8, gridTemplateColumns: "1fr 1fr 1fr", fontSize: 13 }}>
@@ -146,16 +146,18 @@ function ToolCard({ tool, categories, reviews, onSelect }) {
 function PriceBox({ label, value, color, bg }) {
   return (
     <div style={{ background: bg, borderRadius: 8, padding: "6px 8px", textAlign: "center" }}>
-      <div style={{ color, fontWeight: 800 }}>LKR {value}</div>
-      <div style={{ color: "#888", fontSize: 11 }}>{label}</div>
+      <div style={{ color, fontWeight: 500 }}>LKR {value}</div>
+      <div style={{ color: "#8a94a6", fontSize: 11 }}>{label}</div>
     </div>
   );
 }
 
-function ReviewCard({ review, tools, isAdmin, onApprove, onReject, onComment }) {
+function ReviewCard({ review, tools, isAdmin, onApprove, onReject, onComment, onUpdateReview }) {
   const tool = tools.find((t) => t.id === review.toolId);
   const [replyText, setReplyText] = useState("");
   const [showReply, setShowReply] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ author: review.author, body: review.body, status: review.status, ratings: review.ratings });
   const [commentAuthor, setCommentAuthor] = useState("");
   const [commentText, setCommentText] = useState("");
   const [replyTo, setReplyTo] = useState(null);
@@ -185,17 +187,33 @@ function ReviewCard({ review, tools, isAdmin, onApprove, onReject, onComment }) 
     setReplyTo(null);
   }
 
+  function startEdit() {
+    setEditForm({ author: review.author, body: review.body, status: review.status, ratings: { ...review.ratings } });
+    setIsEditing(true);
+  }
+
+  async function saveEdit() {
+    if (!editForm.author.trim() || !editForm.body.trim()) return;
+    await onUpdateReview(review.id, {
+      author: editForm.author.trim(),
+      body: editForm.body.trim(),
+      status: editForm.status,
+      ratings: editForm.ratings,
+    });
+    setIsEditing(false);
+  }
+
   return (
     <div style={{ background: "#fff", border: "1.5px solid #e8e8e8", borderRadius: 12, marginBottom: 14, padding: "18px 20px" }}>
       <div style={{ alignItems: "flex-start", display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
         <div>
-          <span style={{ fontSize: 15, fontWeight: 800 }}>{review.author}</span>
-          {tool && <span style={{ color: "#888", fontSize: 12, marginLeft: 10 }}>re: {tool.name}</span>}
-          <div style={{ color: "#aaa", fontSize: 12, marginTop: 2 }}>{review.date}</div>
+          <span style={{ fontSize: 15, fontWeight: 500 }}>{review.author}</span>
+          {tool && <span style={{ color: "#8a94a6", fontSize: 12, marginLeft: 10 }}>re: {tool.name}</span>}
+          <div style={{ color: "#a0a8b5", fontSize: 12, marginTop: 2 }}>{review.date}</div>
         </div>
         <div style={{ alignItems: "center", display: "flex", gap: 8 }}>
           <Stars rating={avg} />
-          <span style={{ color: "#e67e22", fontSize: 13, fontWeight: 700 }}>{avg.toFixed(1)}</span>
+          <span style={{ color: "#e67e22", fontSize: 13, fontWeight: 500 }}>{avg.toFixed(1)}</span>
           {isAdmin && (
             <span style={{ background: review.status === "approved" ? "#e8f5e9" : "#fff8e1", borderRadius: 10, color: review.status === "approved" ? "#2e7d32" : "#f57f17", fontSize: 11, padding: "2px 8px" }}>
               {review.status}
@@ -203,36 +221,60 @@ function ReviewCard({ review, tools, isAdmin, onApprove, onReject, onComment }) 
           )}
         </div>
       </div>
-      <p style={{ color: "#333", fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>{review.body}</p>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
-        {REVIEW_FEATURES.map((f) => (
-          <div key={f.id} style={{ background: "#f5f5f5", borderRadius: 6, fontSize: 12, padding: "4px 10px" }}>
-            <span style={{ color: "#888" }}>{f.label}: </span>
-            <Stars rating={review.ratings[f.id]} size={12} />
+      {isAdmin && isEditing ? (
+        <div style={{ background: "#f8fafc", border: "1px solid #dfe4ec", borderRadius: 10, display: "grid", gap: 12, marginBottom: 14, padding: 14 }}>
+          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 180px" }}>
+            <label style={labelStyle}>Author<input value={editForm.author} onChange={(e) => setEditForm({ ...editForm, author: e.target.value })} style={inputStyle} /></label>
+            <label style={labelStyle}>Status<select value={editForm.status} onChange={(e) => setEditForm({ ...editForm, status: e.target.value })} style={inputStyle}><option value="pending">Pending</option><option value="approved">Approved</option></select></label>
           </div>
-        ))}
-      </div>
+          <label style={labelStyle}>Review text<textarea value={editForm.body} onChange={(e) => setEditForm({ ...editForm, body: e.target.value })} rows={3} style={inputStyle} /></label>
+          <div style={{ display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))" }}>
+            {REVIEW_FEATURES.map((feature) => (
+              <div key={feature.id} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, padding: 10 }}>
+                <div style={{ color: "#64748b", fontSize: 12, marginBottom: 4 }}>{feature.label}</div>
+                <Stars rating={editForm.ratings[feature.id]} size={18} interactive onRate={(value) => setEditForm({ ...editForm, ratings: { ...editForm.ratings, [feature.id]: value } })} />
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+            <button onClick={() => setIsEditing(false)} style={buttonStyle("#eef2f7", "#667085")}>Cancel</button>
+            <button onClick={saveEdit} style={buttonStyle("#3f6fa6", "#fff")}>Save Review</button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <p style={{ color: "#333", fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>{review.body}</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
+            {REVIEW_FEATURES.map((f) => (
+              <div key={f.id} style={{ background: "#f5f5f5", borderRadius: 6, fontSize: 12, padding: "4px 10px" }}>
+                <span style={{ color: "#8a94a6" }}>{f.label}: </span>
+                <Stars rating={review.ratings[f.id]} size={12} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
       {rootComments.map((c, i) => {
         const commentId = c.id || `legacy-${i}`;
         const replies = comments.filter((item) => item.parentId && Number(item.parentId) === Number(c.id));
         return (
           <div key={commentId} style={{ marginBottom: 8 }}>
-            <div style={{ background: c.isCompany ? "#eaf2ff" : "#fafafa", borderLeft: `3px solid ${c.isCompany ? "#234a91" : "#d0d7e2"}`, borderRadius: "0 8px 8px 0", fontSize: 13, padding: "9px 12px" }}>
-              <strong style={{ color: c.isCompany ? "#234a91" : "#334155" }}>{c.author}</strong>
-              <span style={{ color: "#526071", marginLeft: 8 }}>{c.text}</span>
-              {!isAdmin && c.id && <button onClick={() => setReplyTo(replyTo === c.id ? null : c.id)} style={{ ...buttonStyle("transparent", "#234a91"), marginLeft: 8, padding: "2px 6px" }}>Reply</button>}
+            <div style={{ background: c.isCompany ? "#eaf2ff" : "#fafafa", borderLeft: `3px solid ${c.isCompany ? "#3f6fa6" : "#d0d7e2"}`, borderRadius: "0 8px 8px 0", fontSize: 13, padding: "9px 12px" }}>
+              <strong style={{ color: c.isCompany ? "#3f6fa6" : "#334155" }}>{c.author}</strong>
+              <span style={{ color: "#667085", marginLeft: 8 }}>{c.text}</span>
+              {!isAdmin && c.id && <button onClick={() => setReplyTo(replyTo === c.id ? null : c.id)} style={{ ...buttonStyle("transparent", "#3f6fa6"), marginLeft: 8, padding: "2px 6px" }}>Reply</button>}
             </div>
             {replies.map((reply) => (
               <div key={reply.id} style={{ background: "#fff", borderLeft: "3px solid #dfe4ec", borderRadius: "0 8px 8px 0", fontSize: 13, margin: "6px 0 0 24px", padding: "8px 12px" }}>
-                <strong style={{ color: reply.isCompany ? "#234a91" : "#334155" }}>{reply.author}</strong>
-                <span style={{ color: "#526071", marginLeft: 8 }}>{reply.text}</span>
+                <strong style={{ color: reply.isCompany ? "#3f6fa6" : "#334155" }}>{reply.author}</strong>
+                <span style={{ color: "#667085", marginLeft: 8 }}>{reply.text}</span>
               </div>
             ))}
             {replyTo === c.id && (
               <div style={{ display: "grid", gap: 8, gridTemplateColumns: "160px 1fr auto", margin: "8px 0 0 24px" }}>
                 <input placeholder="Your name" value={commentAuthor} onChange={(e) => setCommentAuthor(e.target.value)} style={{ ...inputStyle, margin: 0 }} />
                 <input placeholder="Reply to this thread..." value={threadText} onChange={(e) => setThreadText(e.target.value)} style={{ ...inputStyle, margin: 0 }} />
-                <button onClick={() => submitThreadReply(c.id)} style={buttonStyle("#234a91", "#fff")}>Post</button>
+                <button onClick={() => submitThreadReply(c.id)} style={buttonStyle("#3f6fa6", "#fff")}>Post</button>
               </div>
             )}
           </div>
@@ -242,18 +284,19 @@ function ReviewCard({ review, tools, isAdmin, onApprove, onReject, onComment }) 
         <div style={{ borderTop: "1px solid #eef2f7", display: "grid", gap: 8, gridTemplateColumns: "160px 1fr auto", marginTop: 12, paddingTop: 12 }}>
           <input placeholder="Your name" value={commentAuthor} onChange={(e) => setCommentAuthor(e.target.value)} style={{ ...inputStyle, margin: 0 }} />
           <input placeholder="Comment on this review..." value={commentText} onChange={(e) => setCommentText(e.target.value)} style={{ ...inputStyle, margin: 0 }} />
-          <button onClick={submitPublicComment} style={buttonStyle("#eef2f7", "#234a91")}>Comment</button>
+          <button onClick={submitPublicComment} style={buttonStyle("#eef2f7", "#3f6fa6")}>Comment</button>
         </div>
       )}
       {isAdmin && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
-          {review.status === "pending" && (
-            <>
-              <button onClick={() => onApprove(review.id)} style={buttonStyle("#e8f5e9", "#2e7d32")}>Approve</button>
-              <button onClick={() => onReject(review.id)} style={buttonStyle("#ffebee", "#c62828")}>Reject</button>
-            </>
+          {review.status === "pending" ? (
+            <button onClick={() => onApprove(review.id)} style={buttonStyle("#e8f5e9", "#2e7d32")}>Approve</button>
+          ) : (
+            <button onClick={() => onUpdateReview(review.id, { status: "pending" })} style={buttonStyle("#fff8e1", "#a16207")}>Mark Pending</button>
           )}
+          <button onClick={startEdit} style={buttonStyle("#eef2ff", "#3f6fa6")}>Edit</button>
           <button onClick={() => setShowReply(!showReply)} style={buttonStyle("#e3f2fd", "#1565c0")}>Company reply</button>
+          <button onClick={() => onReject(review.id)} style={buttonStyle("#ffebee", "#c62828")}>Delete</button>
         </div>
       )}
       {isAdmin && showReply && (
@@ -288,7 +331,7 @@ function ToolDetail({ tool, categories, reviews, onBack, onSubmitReview, onComme
 
   return (
     <div>
-      <button onClick={onBack} style={{ background: "none", border: "none", color: "#5c6bc0", cursor: "pointer", fontSize: 14, fontWeight: 700, marginBottom: 20, padding: 0 }}>Back to catalogue</button>
+      <button onClick={onBack} style={{ background: "none", border: "none", color: "#5c6bc0", cursor: "pointer", fontSize: 14, fontWeight: 500, marginBottom: 20, padding: 0 }}>Back to catalogue</button>
       <div style={{ display: "grid", gap: 32, gridTemplateColumns: "minmax(260px, 1fr) minmax(300px, 1fr)", marginBottom: 36 }}>
         <div>
           <div style={productDetailImageFrameStyle}>
@@ -302,7 +345,7 @@ function ToolDetail({ tool, categories, reviews, onBack, onSubmitReview, onComme
             />
           </div>
           <div style={{ background: "#fff", border: "1.5px solid #e8e8e8", borderRadius: 12, padding: 16 }}>
-            <div style={{ color: "#1a1a2e", fontWeight: 800, marginBottom: 10 }}>Specifications</div>
+            <div style={{ color: "#1f2937", fontWeight: 500, marginBottom: 10 }}>Specifications</div>
             {(tool.specs || []).map((s, i) => (
               <div key={i} style={{ borderBottom: i < tool.specs.length - 1 ? "1px solid #f0f0f0" : "none", color: "#555", fontSize: 13, padding: "4px 0" }}>{s}</div>
             ))}
@@ -310,29 +353,29 @@ function ToolDetail({ tool, categories, reviews, onBack, onSubmitReview, onComme
         </div>
         <div>
           <Badge>{cat?.label}</Badge>
-          <h2 style={{ color: "#1a1a2e", fontSize: 26, fontWeight: 900, margin: "10px 0 4px" }}>{tool.name}</h2>
-          <div style={{ color: "#888", fontSize: 14, marginBottom: 12 }}>by {tool.brand}</div>
+          <h2 style={{ color: "#1f2937", fontSize: 26, fontWeight: 500, margin: "10px 0 4px" }}>{tool.name}</h2>
+          <div style={{ color: "#8a94a6", fontSize: 14, marginBottom: 12 }}>by {tool.brand}</div>
           {avg ? (
             <div style={{ alignItems: "center", display: "flex", gap: 8, marginBottom: 16 }}>
               <Stars rating={avg} size={20} />
-              <span style={{ color: "#e67e22", fontSize: 18, fontWeight: 800 }}>{avg.toFixed(1)}</span>
-              <span style={{ color: "#888", fontSize: 13 }}>({toolReviews.length} reviews)</span>
+              <span style={{ color: "#e67e22", fontSize: 18, fontWeight: 500 }}>{avg.toFixed(1)}</span>
+              <span style={{ color: "#8a94a6", fontSize: 13 }}>({toolReviews.length} reviews)</span>
             </div>
           ) : (
-            <div style={{ color: "#aaa", fontSize: 13, marginBottom: 16 }}>No reviews yet. Be the first.</div>
+            <div style={{ color: "#a0a8b5", fontSize: 13, marginBottom: 16 }}>No reviews yet. Be the first.</div>
           )}
           <p style={{ color: "#444", fontSize: 14, lineHeight: 1.7, marginBottom: 20 }}>{tool.desc}</p>
           <div style={{ background: "#f8f9ff", border: "1.5px solid #e0e5ff", borderRadius: 12, marginBottom: 20, padding: 18 }}>
-            <div style={{ color: "#1a1a2e", fontSize: 15, fontWeight: 800, marginBottom: 12 }}>Estimate Hire Cost</div>
+            <div style={{ color: "#1f2937", fontSize: 15, fontWeight: 500, marginBottom: 12 }}>Estimate Hire Cost</div>
             <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr", marginBottom: 14 }}>
-              <label style={{ color: "#888", fontSize: 12 }}>Start date & time<input type="datetime-local" value={start} onChange={(e) => setStart(e.target.value)} style={inputStyle} /></label>
-              <label style={{ color: "#888", fontSize: 12 }}>End date & time<input type="datetime-local" value={end} onChange={(e) => setEnd(e.target.value)} style={inputStyle} /></label>
+              <label style={{ color: "#8a94a6", fontSize: 12 }}>Start date & time<input type="datetime-local" value={start} onChange={(e) => setStart(e.target.value)} style={inputStyle} /></label>
+              <label style={{ color: "#8a94a6", fontSize: 12 }}>End date & time<input type="datetime-local" value={end} onChange={(e) => setEnd(e.target.value)} style={inputStyle} /></label>
             </div>
             {cost ? (
               <div style={{ background: "#fff", border: "1.5px solid #ffe0b2", borderRadius: 10, padding: "14px 16px", textAlign: "center" }}>
-                <div style={{ color: "#888", fontSize: 12, marginBottom: 4 }}>{cost.label}</div>
-                <div style={{ color: "#e65100", fontSize: 32, fontWeight: 900 }}>LKR {cost.amount.toFixed(2)}</div>
-                <div style={{ color: "#aaa", fontSize: 11, marginTop: 4 }}>Estimated hire cost excluding VAT</div>
+                <div style={{ color: "#8a94a6", fontSize: 12, marginBottom: 4 }}>{cost.label}</div>
+                <div style={{ color: "#e65100", fontSize: 32, fontWeight: 500 }}>LKR {cost.amount.toFixed(2)}</div>
+                <div style={{ color: "#a0a8b5", fontSize: 11, marginTop: 4 }}>Estimated hire cost excluding VAT</div>
               </div>
             ) : start && end ? (
               <div style={{ color: "#c0392b", fontSize: 13, padding: 8 }}>Please check your dates. End must be after start.</div>
@@ -342,22 +385,22 @@ function ToolDetail({ tool, categories, reviews, onBack, onSubmitReview, onComme
       </div>
 
       <section style={{ borderTop: "2px solid #f0f0f0", paddingTop: 28 }}>
-        <h3 style={{ color: "#1a1a2e", fontWeight: 900, marginBottom: 20 }}>Customer Reviews</h3>
-        {toolReviews.length === 0 && <div style={{ color: "#aaa", marginBottom: 24 }}>No approved reviews yet for this item.</div>}
+        <h3 style={{ color: "#1f2937", fontWeight: 500, marginBottom: 20 }}>Customer Reviews</h3>
+        {toolReviews.length === 0 && <div style={{ color: "#a0a8b5", marginBottom: 24 }}>No approved reviews yet for this item.</div>}
         {toolReviews.map((r) => <ReviewCard key={r.id} review={r} tools={[tool]} isAdmin={false} onComment={onComment} />)}
       </section>
 
       <section style={{ background: "#f8f9ff", border: "1.5px solid #e0e5ff", borderRadius: 14, marginTop: 24, padding: 24 }}>
-        <h4 style={{ color: "#1a1a2e", fontWeight: 900, marginBottom: 16 }}>Leave a Review</h4>
+        <h4 style={{ color: "#1f2937", fontWeight: 500, marginBottom: 16 }}>Leave a Review</h4>
         {submitted ? (
-          <div style={{ background: "#e8f5e9", borderRadius: 10, color: "#2e7d32", fontWeight: 700, padding: "16px 20px" }}>Thank you. Your review is pending approval.</div>
+          <div style={{ background: "#e8f5e9", borderRadius: 10, color: "#2e7d32", fontWeight: 500, padding: "16px 20px" }}>Thank you. Your review is pending approval.</div>
         ) : (
           <>
             <input placeholder="Your name" value={newReview.author} onChange={(e) => setNewReview({ ...newReview, author: e.target.value })} style={inputStyle} />
             <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr", margin: "14px 0" }}>
               {REVIEW_FEATURES.map((f) => (
                 <div key={f.id} style={{ background: "#fff", border: "1px solid #e8e8e8", borderRadius: 8, padding: "10px 14px" }}>
-                  <div style={{ color: "#888", fontSize: 12, marginBottom: 4 }}>{f.label}</div>
+                  <div style={{ color: "#8a94a6", fontSize: 12, marginBottom: 4 }}>{f.label}</div>
                   <Stars rating={newReview.ratings[f.id]} size={22} interactive onRate={(v) => setNewReview({ ...newReview, ratings: { ...newReview.ratings, [f.id]: v } })} />
                 </div>
               ))}
@@ -399,10 +442,10 @@ function CustomerPortal({ categories, tools, reviews, catFilter, onCategoryChang
   return (
     <div>
       <div style={summaryGridStyle}>
-        <SummaryTile value={filtered.length} label="Shown" hint="Current result set" color="#234a91" />
+        <SummaryTile value={filtered.length} label="Shown" hint="Current result set" color="#3f6fa6" />
         <SummaryTile value={tools.length} label="Total equipment" hint="Available catalogue" color="#f59e0b" />
         <SummaryTile value={approvedCount} label="Reviews" hint="Approved feedback" color="#0aa37f" />
-        <SummaryTile value={topRatedCount} label="Top rated" hint="4.5 stars and above" color="#234a91" />
+        <SummaryTile value={topRatedCount} label="Top rated" hint="4.5 stars and above" color="#3f6fa6" />
       </div>
 
       <div style={toolbarStyle}>
@@ -413,19 +456,19 @@ function CustomerPortal({ categories, tools, reviews, catFilter, onCategoryChang
           <option value="rating">Sort: Rating</option>
         </select>
         {catFilter !== "all" && (
-          <button onClick={() => onCategoryChange("all")} style={buttonStyle("#edf4ff", "#234a91")}>Clear category</button>
+          <button onClick={() => onCategoryChange("all")} style={buttonStyle("#edf4ff", "#3f6fa6")}>Clear category</button>
         )}
       </div>
-      <div style={{ color: "#888", fontSize: 13, marginBottom: 16 }}>{filtered.length} item{filtered.length !== 1 ? "s" : ""} found</div>
+      <div style={{ color: "#8a94a6", fontSize: 13, marginBottom: 16 }}>{filtered.length} item{filtered.length !== 1 ? "s" : ""} found</div>
       <div style={{ display: "grid", gap: 20, gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}>
         {filtered.map((tool) => <ToolCard key={tool.id} tool={tool} categories={categories} reviews={reviews} onSelect={setSelectedTool} />)}
-        {filtered.length === 0 && <div style={{ color: "#aaa", fontSize: 15, gridColumn: "1/-1", padding: "60px 0", textAlign: "center" }}>No equipment found for your search.</div>}
+        {filtered.length === 0 && <div style={{ color: "#a0a8b5", fontSize: 15, gridColumn: "1/-1", padding: "60px 0", textAlign: "center" }}>No equipment found for your search.</div>}
       </div>
     </div>
   );
 }
 
-function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment, onAddTool, onUpdatePrice, onAddCategory, onUpdateCategory }) {
+function AdminPanel({ categories, tools, reviews, onApprove, onReject, onUpdateReview, onComment, onAddTool, onUpdatePrice, onAddCategory, onUpdateCategory }) {
   const [tab, setTab] = useState("reviews");
   const [editTool, setEditTool] = useState(null);
   const [editForm, setEditForm] = useState(null);
@@ -522,10 +565,10 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment
 
   return (
     <div>
-      <div style={{ alignItems: "center", background: "#1a1a2e", borderRadius: 14, color: "#fff", display: "flex", gap: 16, marginBottom: 24, padding: "20px 28px" }}>
-        <span style={{ fontSize: 28 }}>Admin</span>
+      <div style={{ alignItems: "center", background: "#1f2937", borderRadius: 14, color: "#fff", display: "flex", gap: 16, marginBottom: 24, padding: "20px 28px" }}>
+        <span style={{ fontSize: "clamp(24px, 2.4vw, 28px)" }}>Admin</span>
         <div>
-          <div style={{ fontSize: 18, fontWeight: 900 }}>Admin Back-end</div>
+          <div style={{ fontSize: 18, fontWeight: 500 }}>Admin Back-end</div>
           <div style={{ color: "#90caf9", fontSize: 12 }}>Shelton Tool-Hire Management Portal</div>
         </div>
         <div style={{ display: "flex", gap: 16, marginLeft: "auto", textAlign: "center" }}>
@@ -541,7 +584,7 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment
           ["categories", "Categories"],
           ["add", "Add New Equipment"],
         ].map(([id, label]) => (
-          <button key={id} onClick={() => setTab(id)} style={{ ...buttonStyle(tab === id ? "#fff" : "transparent", tab === id ? "#1a1a2e" : "#888"), boxShadow: tab === id ? "0 1px 4px rgba(0,0,0,0.1)" : "none", flex: 1 }}>{label}</button>
+          <button key={id} onClick={() => setTab(id)} style={{ ...buttonStyle(tab === id ? "#fff" : "transparent", tab === id ? "#1f2937" : "#8a94a6"), boxShadow: tab === id ? "0 1px 4px rgba(0,0,0,0.1)" : "none", flex: 1 }}>{label}</button>
         ))}
       </div>
 
@@ -549,25 +592,25 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment
         <div>
           {pending.length > 0 && (
             <>
-              <div style={{ color: "#c62828", fontWeight: 800, marginBottom: 12 }}>Awaiting Moderation ({pending.length})</div>
-              {pending.map((r) => <ReviewCard key={r.id} review={r} tools={tools} isAdmin onApprove={onApprove} onReject={onReject} onComment={onComment} />)}
+              <div style={{ color: "#c62828", fontWeight: 500, marginBottom: 12 }}>Awaiting Moderation ({pending.length})</div>
+              {pending.map((r) => <ReviewCard key={r.id} review={r} tools={tools} isAdmin onApprove={onApprove} onReject={onReject} onUpdateReview={onUpdateReview} onComment={onComment} />)}
               <div style={{ borderTop: "2px solid #f0f0f0", marginBottom: 20 }} />
             </>
           )}
-          <div style={{ color: "#2e7d32", fontWeight: 800, marginBottom: 12 }}>Approved Reviews ({approved.length})</div>
-          {approved.map((r) => <ReviewCard key={r.id} review={r} tools={tools} isAdmin onApprove={onApprove} onReject={onReject} onComment={onComment} />)}
+          <div style={{ color: "#2e7d32", fontWeight: 500, marginBottom: 12 }}>Approved Reviews ({approved.length})</div>
+          {approved.map((r) => <ReviewCard key={r.id} review={r} tools={tools} isAdmin onApprove={onApprove} onReject={onReject} onUpdateReview={onUpdateReview} onComment={onComment} />)}
         </div>
       )}
 
       {tab === "categories" && (
         <div style={{ display: "grid", gap: 18 }}>
           <div style={{ background: "#fff", border: "1px solid #dfe4ec", borderRadius: 12, padding: 20 }}>
-            <h4 style={{ color: "#121826", fontWeight: 900, margin: "0 0 14px" }}>Add Category</h4>
+            <h4 style={{ color: "#1f2937", fontWeight: 500, margin: "0 0 14px" }}>Add Category</h4>
             <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 140px 1fr auto", alignItems: "end" }}>
               <label style={labelStyle}>Category name<input value={categoryForm.label} onChange={(e) => setCategoryForm({ ...categoryForm, label: e.target.value })} style={inputStyle} /></label>
               <label style={labelStyle}>Short icon/text<input value={categoryForm.icon} onChange={(e) => setCategoryForm({ ...categoryForm, icon: e.target.value })} placeholder="e.g. Lift" style={inputStyle} /></label>
               <label style={labelStyle}>Small image path<input value={categoryForm.img} onChange={(e) => setCategoryForm({ ...categoryForm, img: e.target.value })} placeholder="/images/categories/lifting.jpg" style={inputStyle} /></label>
-              <button onClick={addCategory} style={buttonStyle("#234a91", "#fff")}>Add</button>
+              <button onClick={addCategory} style={buttonStyle("#3f6fa6", "#fff")}>Add</button>
             </div>
           </div>
           <div style={{ background: "#fff", border: "1px solid #dfe4ec", borderRadius: 12, overflow: "hidden" }}>
@@ -582,8 +625,8 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment
                     }}
                     style={{ borderRadius: 8, height: 40, objectFit: "cover", width: 40 }}
                   />
-                  <span style={{ background: "#eaf2ff", borderRadius: 8, color: "#234a91", fontSize: 12, fontWeight: 900, padding: "4px 8px" }}>{category.icon}</span>
-                  <span style={{ color: "#121826", fontWeight: 800 }}>{category.label}</span>
+                  <span style={{ background: "#eaf2ff", borderRadius: 8, color: "#3f6fa6", fontSize: 12, fontWeight: 500, padding: "4px 8px" }}>{category.icon}</span>
+                  <span style={{ color: "#1f2937", fontWeight: 500 }}>{category.label}</span>
                   <span style={{ color: "#8a94a6", fontSize: 12, marginLeft: "auto" }}>{category.id}</span>
                   <button onClick={() => openEditCategory(category)} style={buttonStyle("#e3f2fd", "#1565c0")}>{editCategoryId === category.id ? "Close" : "Edit"}</button>
                 </div>
@@ -592,7 +635,7 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment
                     <label style={labelStyle}>Category name<input value={editCategoryForm.label} onChange={(e) => setEditCategoryForm({ ...editCategoryForm, label: e.target.value })} style={inputStyle} /></label>
                     <label style={labelStyle}>Icon/text<input value={editCategoryForm.icon} onChange={(e) => setEditCategoryForm({ ...editCategoryForm, icon: e.target.value })} style={inputStyle} /></label>
                     <label style={labelStyle}>Small image path<input value={editCategoryForm.img} onChange={(e) => setEditCategoryForm({ ...editCategoryForm, img: e.target.value })} placeholder="/images/categories/lifting.jpg" style={inputStyle} /></label>
-                    <button onClick={() => { setEditCategoryId(null); setEditCategoryForm(null); }} style={buttonStyle("#eef2f7", "#526071")}>Cancel</button>
+                    <button onClick={() => { setEditCategoryId(null); setEditCategoryForm(null); }} style={buttonStyle("#eef2f7", "#667085")}>Cancel</button>
                     <button onClick={() => saveEditedCategory(category.id)} style={buttonStyle("#2e7d32", "#fff")}>Save</button>
                   </div>
                 )}
@@ -617,8 +660,8 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment
                     style={{ borderRadius: 8, height: 48, objectFit: "cover", width: 64 }}
                   />
                   <div>
-                  <div style={{ color: "#1a1a2e", fontWeight: 800 }}>{tool.name}</div>
-                  <div style={{ color: "#888", fontSize: 12 }}>{tool.brand} - {categories.find((c) => c.id === tool.category)?.label}</div>
+                  <div style={{ color: "#1f2937", fontWeight: 500 }}>{tool.name}</div>
+                  <div style={{ color: "#8a94a6", fontSize: 12 }}>{tool.brand} - {categories.find((c) => c.id === tool.category)?.label}</div>
                   </div>
                 </div>
                 <button onClick={() => openEditTool(tool)} style={buttonStyle("#e3f2fd", "#1565c0")}>{editTool === tool.id ? "Close" : "Edit Equipment"}</button>
@@ -642,7 +685,7 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment
                   <label style={labelStyle}>Description<textarea value={editForm.desc} onChange={(e) => setEditForm({ ...editForm, desc: e.target.value })} rows={3} style={inputStyle} /></label>
                   <label style={labelStyle}>Specifications, one per line<textarea value={editForm.specs} onChange={(e) => setEditForm({ ...editForm, specs: e.target.value })} rows={5} style={inputStyle} /></label>
                   <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                    <button onClick={() => { setEditTool(null); setEditForm(null); }} style={buttonStyle("#eef2f7", "#526071")}>Cancel</button>
+                    <button onClick={() => { setEditTool(null); setEditForm(null); }} style={buttonStyle("#eef2f7", "#667085")}>Cancel</button>
                     <button onClick={() => saveEditedTool(tool.id)} style={buttonStyle("#2e7d32", "#fff")}>Save Changes</button>
                   </div>
                 </div>
@@ -654,7 +697,7 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment
 
       {tab === "add" && (
         <div style={{ background: "#fff", border: "1.5px solid #e8e8e8", borderRadius: 14, padding: 24 }}>
-          <h4 style={{ color: "#1a1a2e", fontWeight: 900, marginBottom: 20 }}>Add New Equipment</h4>
+          <h4 style={{ color: "#1f2937", fontWeight: 500, marginBottom: 20 }}>Add New Equipment</h4>
           <div style={{ display: "grid", gap: 14, gridTemplateColumns: "1fr 1fr", marginBottom: 14 }}>
             <label style={labelStyle}>Equipment Name *<input value={addForm.name} onChange={(e) => setAddForm({ ...addForm, name: e.target.value })} style={inputStyle} /></label>
             <label style={labelStyle}>Brand<input value={addForm.brand} onChange={(e) => setAddForm({ ...addForm, brand: e.target.value })} style={inputStyle} /></label>
@@ -675,7 +718,7 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onComment
 function Stat({ label, value, color }) {
   return (
     <div>
-      <div style={{ color, fontSize: 22, fontWeight: 900 }}>{value}</div>
+      <div style={{ color, fontSize: 22, fontWeight: 500 }}>{value}</div>
       <div style={{ color: "#90caf9", fontSize: 11 }}>{label}</div>
     </div>
   );
@@ -684,8 +727,8 @@ function Stat({ label, value, color }) {
 function SummaryTile({ value, label, hint, color }) {
   return (
     <div style={summaryTileStyle}>
-      <div style={{ color, fontSize: 30, fontWeight: 900, lineHeight: 1 }}>{value}</div>
-      <div style={{ color: "#121826", fontSize: 13, fontWeight: 900, marginTop: 6 }}>{label}</div>
+      <div style={{ color, fontSize: 30, fontWeight: 500, lineHeight: 1 }}>{value}</div>
+      <div style={{ color: "#1f2937", fontSize: 13, fontWeight: 500, marginTop: 6 }}>{label}</div>
       <div style={{ color: "#8a94a6", fontSize: 12, marginTop: 2 }}>{hint}</div>
     </div>
   );
@@ -703,7 +746,7 @@ const inputStyle = {
   width: "100%",
 };
 
-const labelStyle = { color: "#888", fontSize: 12 };
+const labelStyle = { color: "#8a94a6", fontSize: 12 };
 
 const productCardImageStyle = {
   display: "block",
@@ -748,7 +791,7 @@ function buttonStyle(background, color) {
     color,
     cursor: "pointer",
     fontSize: 13,
-    fontWeight: 800,
+    fontWeight: 500,
     padding: "8px 16px",
   };
 }
@@ -767,12 +810,12 @@ function AppShell({ route, setRoute, categories, selectedCategory, onCategoryCha
           <header className="app-page-header" style={pageHeaderStyle}>
             <div>
               <div style={{ color: "#8a94a6", fontSize: 12, marginBottom: 2 }}>{isAdmin ? "Management" : "Catalogue"}</div>
-              <h1 style={{ color: "#000", fontSize: 28, fontWeight: 900, margin: "0 0 4px" }}>{title}</h1>
-              <p style={{ color: "#526071", fontSize: 14 }}>{subtitle}</p>
+              <h1 style={{ color: "#1f2937", fontSize: "clamp(24px, 2.4vw, 28px)", fontWeight: 500, margin: "0 0 4px" }}>{title}</h1>
+              <p style={{ color: "#667085", fontSize: 14 }}>{subtitle}</p>
             </div>
             <div style={connectionPillStyle}>
               <span style={{ background: status === "ready" ? "#0aa37f" : status === "error" ? "#ef4444" : "#f59e0b", borderRadius: 999, height: 8, width: 8 }} />
-              <span style={{ color: "#526071", fontSize: 13, fontWeight: 700 }}>{status === "ready" ? "Database connected" : status === "error" ? "API offline" : "Loading"}</span>
+              <span style={{ color: "#667085", fontSize: 13, fontWeight: 500 }}>{status === "ready" ? "Database connected" : status === "error" ? "API offline" : "Loading"}</span>
             </div>
           </header>
 
@@ -797,7 +840,7 @@ function TopBar({ isAdmin, onLogout }) {
       <div style={{ alignItems: "center", display: "flex", gap: 10 }}>
         <div style={topLogoStyle}>ST</div>
         <div>
-          <div style={{ color: "#fff", fontSize: 16, fontWeight: 900, lineHeight: 1 }}>Shelton Tool-Hire</div>
+          <div style={{ color: "#fff", fontSize: 16, fontWeight: 500, lineHeight: 1 }}>Shelton Tool-Hire</div>
           <div style={{ color: "#b9cff5", fontSize: 11, marginTop: 3 }}>Equipment Hire System</div>
         </div>
       </div>
@@ -805,13 +848,13 @@ function TopBar({ isAdmin, onLogout }) {
         <div style={{ position: "relative" }}>
           <button onClick={() => setProfileOpen((open) => !open)} style={profileButtonStyle} title="Profile menu">
             <span style={avatarStyle}><Icon name="user" size={18} /></span>
-            <span style={{ color: "#fff", fontSize: 13, fontWeight: 800 }}>{isAdmin ? "Admin" : "Guest"}</span>
+            <span style={{ color: "#fff", fontSize: 13, fontWeight: 500 }}>{isAdmin ? "Admin" : "Guest"}</span>
             <Icon name="chevron" size={14} color="#dbe8ff" />
           </button>
           {profileOpen && (
             <div style={profileMenuStyle}>
               <div style={{ borderBottom: "1px solid #eef2f7", padding: "12px 14px" }}>
-                <div style={{ color: "#121826", fontSize: 14, fontWeight: 900 }}>{isAdmin ? "Admin User" : "Customer User"}</div>
+                <div style={{ color: "#1f2937", fontSize: 14, fontWeight: 500 }}>{isAdmin ? "Admin User" : "Customer User"}</div>
                 <div style={{ color: "#8a94a6", fontSize: 12, marginTop: 2 }}>{isAdmin ? "admin@shelton.local" : "guest@shelton.local"}</div>
               </div>
               <ProfileMenuItem icon="settings" label="Profile settings" />
@@ -862,7 +905,7 @@ function SidePanel({ route, setRoute, categories, selectedCategory, onCategoryCh
 
 function SideNavItem({ active, label, icon, img, badge, onClick }) {
   return (
-    <button onClick={onClick} style={{ ...sideNavItemStyle, background: active ? "#eaf2ff" : "transparent", borderLeftColor: active ? "#f4c400" : "transparent", color: active ? "#153f8f" : "#526071", fontWeight: active ? 900 : 700 }}>
+    <button onClick={onClick} style={{ ...sideNavItemStyle, background: active ? "#eaf2ff" : "transparent", borderLeftColor: active ? "#f5c84b" : "transparent", color: active ? "#365f95" : "#667085", fontWeight: active ? 900 : 700 }}>
       {img ? (
         <img
           src={img}
@@ -873,21 +916,21 @@ function SideNavItem({ active, label, icon, img, badge, onClick }) {
           style={{ borderRadius: 6, height: 24, objectFit: "cover", width: 24 }}
         />
       ) : (
-        <span style={{ alignItems: "center", color: active ? "#153f8f" : "#7b8797", display: "flex", width: 24 }}>
+        <span style={{ alignItems: "center", color: active ? "#365f95" : "#7b8797", display: "flex", width: 24 }}>
           <Icon name={icon} size={18} />
         </span>
       )}
       <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{label}</span>
-      {badge ? <span style={{ background: "#eef2f7", borderRadius: 999, color: "#526071", fontSize: 11, padding: "1px 7px" }}>{badge}</span> : null}
+      {badge ? <span style={{ background: "#eef2f7", borderRadius: 999, color: "#667085", fontSize: 11, padding: "1px 7px" }}>{badge}</span> : null}
     </button>
   );
 }
 
 function ProfileMenuItem({ icon, label, danger = false, onClick }) {
   return (
-    <button type="button" onClick={onClick} style={{ alignItems: "center", background: "transparent", border: "none", color: danger ? "#b42318" : "#526071", cursor: "pointer", display: "flex", gap: 10, padding: "9px 14px", textAlign: "left", width: "100%" }}>
+    <button type="button" onClick={onClick} style={{ alignItems: "center", background: "transparent", border: "none", color: danger ? "#b42318" : "#667085", cursor: "pointer", display: "flex", gap: 10, padding: "9px 14px", textAlign: "left", width: "100%" }}>
       <Icon name={icon} size={16} color={danger ? "#b42318" : "#64748b"} />
-      <span style={{ fontSize: 13, fontWeight: 700 }}>{label}</span>
+      <span style={{ fontSize: 13, fontWeight: 500 }}>{label}</span>
     </button>
   );
 }
@@ -984,12 +1027,12 @@ function AdminLogin({ onLogin }) {
           <div style={{ alignItems: "center", background: "#fff", border: "1px solid #dfe4ec", borderRadius: 18, boxShadow: "0 18px 50px rgba(35,74,145,0.10)", display: "inline-flex", gap: 10, marginBottom: 22, padding: "10px 14px" }}>
             <span style={{ ...avatarStyle, height: 36, width: 36 }}><Icon name="admin" size={19} /></span>
             <div>
-              <div style={{ color: "#121826", fontSize: 14, fontWeight: 900 }}>Shelton Admin</div>
+              <div style={{ color: "#1f2937", fontSize: 14, fontWeight: 500 }}>Shelton Admin</div>
               <div style={{ color: "#8a94a6", fontSize: 12 }}>Secure management access</div>
             </div>
           </div>
-          <h1 style={{ color: "#07111f", fontSize: 42, fontWeight: 800, letterSpacing: 0, lineHeight: 1.08, margin: "0 0 14px" }}>Manage equipment, reviews, and categories.</h1>
-          <p style={{ color: "#526071", fontSize: 16, lineHeight: 1.7, maxWidth: 500 }}>Sign in with the mock admin account to update the hire catalogue, approve reviews, and maintain product information.</p>
+          <h1 style={{ color: "#1f2937", fontSize: "clamp(30px, 4vw, 40px)", fontWeight: 500, letterSpacing: 0, lineHeight: 1.08, margin: "0 0 14px" }}>Manage equipment, reviews, and categories.</h1>
+          <p style={{ color: "#667085", fontSize: 16, lineHeight: 1.7, maxWidth: 500 }}>Sign in with the mock admin account to update the hire catalogue, approve reviews, and maintain product information.</p>
           <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(3, minmax(0, 1fr))", marginTop: 28, maxWidth: 500 }}>
             <LoginMetric value="Tools" label="Catalogue" />
             <LoginMetric value="Reviews" label="Moderation" />
@@ -998,8 +1041,8 @@ function AdminLogin({ onLogin }) {
         </section>
 
         <form onSubmit={submit} style={{ background: "#fff", border: "1px solid #dfe4ec", borderRadius: 18, boxShadow: "0 24px 70px rgba(15,23,42,0.12)", padding: 30, width: "100%" }}>
-          <div style={{ color: "#234a91", fontSize: 12, fontWeight: 900, marginBottom: 8, textTransform: "uppercase" }}>Admin login</div>
-          <h2 style={{ color: "#07111f", fontSize: 26, fontWeight: 800, margin: "0 0 8px" }}>Welcome back</h2>
+          <div style={{ color: "#3f6fa6", fontSize: 12, fontWeight: 500, marginBottom: 8, textTransform: "uppercase" }}>Admin login</div>
+          <h2 style={{ color: "#1f2937", fontSize: 26, fontWeight: 500, margin: "0 0 8px" }}>Welcome back</h2>
           <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.6, marginBottom: 22 }}>Enter your mock admin credentials to continue.</p>
 
           <label style={labelStyle}>
@@ -1014,11 +1057,11 @@ function AdminLogin({ onLogin }) {
             <label style={{ alignItems: "center", color: "#64748b", display: "flex", fontSize: 13, gap: 8 }}>
               <input type="checkbox" defaultChecked /> Remember me
             </label>
-            <button type="button" style={{ background: "transparent", border: "none", color: "#234a91", cursor: "pointer", fontSize: 13, fontWeight: 700, padding: 0 }}>Forgot password?</button>
+            <button type="button" style={{ background: "transparent", border: "none", color: "#3f6fa6", cursor: "pointer", fontSize: 13, fontWeight: 500, padding: 0 }}>Forgot password?</button>
           </div>
           {error && <div style={{ background: "#fff0f0", border: "1px solid #ffc9c9", borderRadius: 10, color: "#b42318", fontSize: 13, marginTop: 14, padding: "10px 12px" }}>{error}</div>}
-          <button type="submit" style={{ ...buttonStyle("#234a91", "#fff"), fontSize: 14, marginTop: 20, padding: "12px 18px", width: "100%" }}>Sign in</button>
-          <button type="button" onClick={() => { window.history.pushState({}, "", "/"); window.dispatchEvent(new PopStateEvent("popstate")); }} style={{ ...buttonStyle("#eef2f7", "#526071"), marginTop: 10, padding: "12px 18px", width: "100%" }}>Back to catalogue</button>
+          <button type="submit" style={{ ...buttonStyle("#3f6fa6", "#fff"), fontSize: 14, marginTop: 20, padding: "12px 18px", width: "100%" }}>Sign in</button>
+          <button type="button" onClick={() => { window.history.pushState({}, "", "/"); window.dispatchEvent(new PopStateEvent("popstate")); }} style={{ ...buttonStyle("#eef2f7", "#667085"), marginTop: 10, padding: "12px 18px", width: "100%" }}>Back to catalogue</button>
         </form>
       </main>
     </div>
@@ -1028,7 +1071,7 @@ function AdminLogin({ onLogin }) {
 function LoginMetric({ value, label }) {
   return (
     <div style={{ background: "rgba(255,255,255,0.78)", border: "1px solid #dfe4ec", borderRadius: 14, padding: "14px 16px" }}>
-      <div style={{ color: "#234a91", fontSize: 18, fontWeight: 800 }}>{value}</div>
+      <div style={{ color: "#3f6fa6", fontSize: 18, fontWeight: 500 }}>{value}</div>
       <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>{label}</div>
     </div>
   );
@@ -1062,7 +1105,7 @@ const pageHeaderStyle = {
 
 const topBarStyle = {
   alignItems: "center",
-  background: "#234a91",
+  background: "#3f6fa6",
   boxSizing: "border-box",
   display: "flex",
   height: 52,
@@ -1072,12 +1115,12 @@ const topBarStyle = {
 
 const topLogoStyle = {
   alignItems: "center",
-  background: "#f4c400",
+  background: "#f5c84b",
   borderRadius: 8,
-  color: "#153f8f",
+  color: "#365f95",
   display: "flex",
   fontSize: 13,
-  fontWeight: 900,
+  fontWeight: 500,
   height: 32,
   justifyContent: "center",
   width: 32,
@@ -1085,12 +1128,12 @@ const topLogoStyle = {
 
 const avatarStyle = {
   alignItems: "center",
-  background: "#f4c400",
+  background: "#f5c84b",
   borderRadius: 999,
-  color: "#153f8f",
+  color: "#365f95",
   display: "flex",
   fontSize: 12,
-  fontWeight: 900,
+  fontWeight: 500,
   height: 32,
   justifyContent: "center",
   width: 32,
@@ -1136,7 +1179,7 @@ const sideNavItemStyle = {
 const sideSectionLabelStyle = {
   color: "#8a94a6",
   fontSize: 12,
-  fontWeight: 800,
+  fontWeight: 500,
   margin: "22px 18px 8px",
   textTransform: "uppercase",
 };
@@ -1249,6 +1292,12 @@ export default function App() {
     setReviews((prev) => prev.map((r) => (r.id === id ? updated : r)));
   }
 
+  async function handleUpdateReview(id, updates) {
+    const updated = await api(`/reviews/${id}`, { method: "PATCH", body: JSON.stringify(updates) });
+    setReviews((prev) => prev.map((r) => (r.id === id ? updated : r)));
+    return updated;
+  }
+
   async function handleReject(id) {
     await api(`/reviews/${id}`, { method: "DELETE" });
     setReviews((prev) => prev.filter((r) => r.id !== id));
@@ -1328,7 +1377,9 @@ export default function App() {
       }}
     >
       {route === "customer" && <CustomerPortal categories={categories} tools={tools} reviews={reviews} catFilter={catFilter} onCategoryChange={setCatFilter} onSubmitReview={handleSubmitReview} onComment={handleComment} />}
-      {route === "admin" && <AdminPanel categories={categories} tools={tools} reviews={reviews} onApprove={handleApprove} onReject={handleReject} onComment={handleComment} onAddTool={handleAddTool} onUpdatePrice={handleUpdatePrice} onAddCategory={handleAddCategory} onUpdateCategory={handleUpdateCategory} />}
+      {route === "admin" && <AdminPanel categories={categories} tools={tools} reviews={reviews} onApprove={handleApprove} onReject={handleReject} onUpdateReview={handleUpdateReview} onComment={handleComment} onAddTool={handleAddTool} onUpdatePrice={handleUpdatePrice} onAddCategory={handleAddCategory} onUpdateCategory={handleUpdateCategory} />}
     </AppShell>
   );
 }
+
+

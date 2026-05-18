@@ -503,6 +503,10 @@ const server = http.createServer(async (req, res) => {
       if (!review) return notFound(res);
 
       if (body.status) review.status = body.status;
+      if (body.author !== undefined) review.author = String(body.author || "").trim();
+      if (body.body !== undefined) review.body = String(body.body || "").trim();
+      if (body.ratings && typeof body.ratings === "object") review.ratings = body.ratings;
+      if (!review.author || !review.body) return send(res, 400, { error: "Review author and body are required" });
       await writeDb(db);
       return send(res, 200, review);
     }
