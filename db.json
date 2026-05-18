@@ -1,0 +1,398 @@
+{
+  "categories": [
+    {
+      "id": "building",
+      "label": "Building & Construction",
+      "icon": "Build",
+      "img": "/images/categories/category-placeholder.svg"
+    },
+    {
+      "id": "cleaning",
+      "label": "Cleaning Equipment",
+      "icon": "Clean",
+      "img": "/images/categories/category-placeholder.svg"
+    },
+    {
+      "id": "decorating",
+      "label": "Decorating Tools",
+      "icon": "Paint",
+      "img": "/images/categories/category-placeholder.svg"
+    },
+    {
+      "id": "landscaping",
+      "label": "Landscaping & Garden",
+      "icon": "Garden",
+      "img": "/images/categories/category-placeholder.svg"
+    },
+    {
+      "id": "electrical",
+      "label": "Electrical & Heating",
+      "icon": "Power",
+      "img": "/images/categories/category-placeholder.svg"
+    },
+    {
+      "id": "plumbing",
+      "label": "Plumbing Tools",
+      "icon": "Pipe",
+      "img": "/images/categories/category-placeholder.svg"
+    },
+    {
+      "id": "access",
+      "label": "Access Equipment",
+      "icon": "Access",
+      "img": "/images/categories/category-placeholder.svg"
+    },
+    {
+      "id": "groundwork",
+      "label": "Groundwork & Demolition",
+      "icon": "Ground",
+      "img": "/images/categories/category-placeholder.svg"
+    }
+  ],
+  "tools": [
+    {
+      "id": 1,
+      "category": "building",
+      "name": "Concrete Mixer 130L",
+      "brand": "Belle",
+      "img": "/images/products/Concrete Mixer 130L.jpg",
+      "hourly": 1200,
+      "daily": 5500,
+      "weekly": 12000,
+      "desc": "Heavy-duty 130L drum electric concrete mixer. Suitable for large concrete, mortar, and screed mixes. Comes with cleaning kit.",
+      "specs": [
+        "130L drum capacity",
+        "550W motor",
+        "230V",
+        "Weight: 62kg",
+        "Drum speed: 22rpm"
+      ]
+    },
+    {
+      "id": 2,
+      "category": "building",
+      "name": "Scaffolding Tower 5m",
+      "brand": "Youngman",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 12,
+      "daily": 45,
+      "weekly": 130,
+      "desc": "Aluminium mobile scaffold tower, working height 5m. Quick-lock system with stabilisers. Complies with EN 1004 standard.",
+      "specs": [
+        "Working height: 5m",
+        "Platform: 1.35m x 0.7m",
+        "Load: 225kg",
+        "Aluminium frame",
+        "Castor wheels"
+      ]
+    },
+    {
+      "id": 3,
+      "category": "cleaning",
+      "name": "Industrial Pressure Washer",
+      "brand": "Karcher",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 9,
+      "daily": 28,
+      "weekly": 80,
+      "desc": "Professional grade 200 bar cold water pressure washer. Ideal for driveways, patios, vehicles, and industrial cleaning.",
+      "specs": [
+        "200 bar pressure",
+        "500L/hr flow rate",
+        "3000W motor",
+        "15m hose",
+        "6 nozzle set"
+      ]
+    },
+    {
+      "id": 4,
+      "category": "cleaning",
+      "name": "Ride-On Floor Scrubber",
+      "brand": "Tennant",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 22,
+      "daily": 75,
+      "weekly": 210,
+      "desc": "Battery-powered ride-on floor scrubber. 80cm path, ideal for large commercial floors. Full day on single charge.",
+      "specs": [
+        "80cm scrub path",
+        "8hr battery life",
+        "60L solution tank",
+        "Max gradient: 15%",
+        "Weight: 280kg"
+      ]
+    },
+    {
+      "id": 5,
+      "category": "decorating",
+      "name": "Airless Paint Sprayer",
+      "brand": "Graco",
+      "img": "/images/products/Airless Paint Sprayer.jpg",
+      "hourly": 7,
+      "daily": 25,
+      "weekly": 70,
+      "desc": "Professional airless sprayer for interior/exterior use. Suitable for latex, enamels and varnishes up to 100% unthinned.",
+      "specs": [
+        "3300 PSI",
+        "0.53 GPM",
+        "30m hose",
+        "Spray tip 515",
+        "RAC IV tip guard"
+      ]
+    },
+    {
+      "id": 6,
+      "category": "decorating",
+      "name": "Wallpaper Stripper Steam",
+      "brand": "Wagner",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 4.5,
+      "daily": 14,
+      "weekly": 38,
+      "desc": "Electric steam wallpaper stripper with large 4L tank. Reduces stripping time by up to 50% versus chemical methods.",
+      "specs": [
+        "4L tank",
+        "2300W",
+        "Up to 4hr per fill",
+        "Plate: 30cm x 25cm",
+        "Safety valve fitted"
+      ]
+    },
+    {
+      "id": 7,
+      "category": "landscaping",
+      "name": "Ride-On Lawn Mower",
+      "brand": "John Deere",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 18,
+      "daily": 65,
+      "weekly": 190,
+      "desc": "42 inch ride-on mower, ideal for lawns up to 2 acres. Hydrostatic transmission, 6-speed, electric start.",
+      "specs": [
+        "107cm cut",
+        "17.5hp engine",
+        "6 cutting heights",
+        "Grass bag included",
+        "Max speed: 9km/h"
+      ]
+    },
+    {
+      "id": 8,
+      "category": "landscaping",
+      "name": "Stump Grinder 13HP",
+      "brand": "Vermeer",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 25,
+      "daily": 90,
+      "weekly": 260,
+      "desc": "Petrol stump grinder removes stumps up to 250mm diameter. Self-propelled with remote control operation.",
+      "specs": [
+        "13HP engine",
+        "250mm max stump dia",
+        "60cm grinding depth",
+        "Self-propelled",
+        "Tungsten teeth"
+      ]
+    },
+    {
+      "id": 9,
+      "category": "electrical",
+      "name": "Site Generator 7kVA",
+      "brand": "Honda",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 10,
+      "daily": 38,
+      "weekly": 110,
+      "desc": "Honda 7kVA professional site generator. Electric start, 110V/230V outputs. Long run fuel tank for full day operation.",
+      "specs": [
+        "7kVA output",
+        "110V and 230V outlets",
+        "13hr run time",
+        "68dB noise",
+        "Electric start"
+      ]
+    },
+    {
+      "id": 10,
+      "category": "electrical",
+      "name": "Infrared Heater 3kW",
+      "brand": "Stiebel",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 5,
+      "daily": 18,
+      "weekly": 48,
+      "desc": "Commercial infrared space heater 3kW. Instant heat, no warm-up time. Safe for indoor and outdoor use.",
+      "specs": [
+        "3kW output",
+        "Instant heat",
+        "IP44 rated",
+        "10m2 coverage",
+        "Safety thermostat"
+      ]
+    },
+    {
+      "id": 11,
+      "category": "plumbing",
+      "name": "Drain Cleaning Machine",
+      "brand": "Rothenberger",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 8,
+      "daily": 28,
+      "weekly": 78,
+      "desc": "Electric drain cleaning machine with 22m cable. Clears blockages in pipes 40-100mm. Reversible rotation.",
+      "specs": [
+        "22m cable",
+        "40-100mm pipe range",
+        "230V motor",
+        "Reversible",
+        "Drum style"
+      ]
+    },
+    {
+      "id": 12,
+      "category": "access",
+      "name": "Cherry Picker 12m LGPL",
+      "brand": "Genie",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 35,
+      "daily": 120,
+      "weekly": 350,
+      "desc": "Self-propelled electric cherry picker 12m working height. Narrow width for indoor/outdoor access. Zero emissions.",
+      "specs": [
+        "12m working height",
+        "Electric drive",
+        "1.2m x 0.76m basket",
+        "200kg capacity",
+        "240kg machine weight"
+      ]
+    },
+    {
+      "id": 13,
+      "category": "groundwork",
+      "name": "Excavator Mini 1.5T",
+      "brand": "Kubota",
+      "img": "/images/products/product-placeholder.svg",
+      "hourly": 40,
+      "daily": 145,
+      "weekly": 420,
+      "desc": "1.5 tonne mini excavator with full 360 degree rotation. Zero tail swing, ideal for confined site work. Rubber tracks.",
+      "specs": [
+        "1.5T operating weight",
+        "1.5m dig depth",
+        "360 degree rotation",
+        "Zero tail swing",
+        "Kubota diesel engine"
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "toolId": 1,
+      "author": "James T.",
+      "date": "2024-11-12",
+      "ratings": {
+        "performance": 5,
+        "service": 4,
+        "support": 5,
+        "aftersales": 4,
+        "misc": 5
+      },
+      "body": "Excellent mixer, ran all day without overheating. Delivery was on time and the driver helped unload. Would definitely rent again.",
+      "status": "approved",
+      "comments": [
+        {
+          "author": "Shelton Tool-Hire",
+          "text": "Thanks James, great to hear the mixer served you well!",
+          "isCompany": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "toolId": 1,
+      "author": "Maria C.",
+      "date": "2024-10-05",
+      "ratings": {
+        "performance": 4,
+        "service": 5,
+        "support": 4,
+        "aftersales": 3,
+        "misc": 4
+      },
+      "body": "Worked well for our patio project. The drum was slightly noisy but performed fine. Customer service team were very responsive when I called with a query.",
+      "status": "approved",
+      "comments": []
+    },
+    {
+      "id": 3,
+      "toolId": 3,
+      "author": "Ben R.",
+      "date": "2024-11-20",
+      "ratings": {
+        "performance": 5,
+        "service": 5,
+        "support": 5,
+        "aftersales": 5,
+        "misc": 5
+      },
+      "body": "The Karcher blasted through years of grime on our driveway. The online booking was smooth and collection was hassle-free.",
+      "status": "approved",
+      "comments": []
+    },
+    {
+      "id": 4,
+      "toolId": 7,
+      "author": "Fiona H.",
+      "date": "2024-09-30",
+      "ratings": {
+        "performance": 4,
+        "service": 3,
+        "support": 4,
+        "aftersales": 4,
+        "misc": 4
+      },
+      "body": "Mower handled the garden well but pickup was 30 mins late. Good instruction sheet in the cab though.",
+      "status": "approved",
+      "comments": [
+        {
+          "author": "Shelton Tool-Hire",
+          "text": "Apologies for the delay Fiona, we've addressed the scheduling issue.",
+          "isCompany": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "toolId": 9,
+      "author": "Kevin O.",
+      "date": "2024-12-01",
+      "ratings": {
+        "performance": 5,
+        "service": 5,
+        "support": 5,
+        "aftersales": 5,
+        "misc": 5
+      },
+      "body": "Generator kept our site running through two power outages. Brilliant machine.",
+      "status": "approved",
+      "comments": []
+    },
+    {
+      "id": 6,
+      "toolId": 5,
+      "author": "Lisa M.",
+      "date": "2024-11-28",
+      "ratings": {
+        "performance": 3,
+        "service": 4,
+        "support": 5,
+        "aftersales": 4,
+        "misc": 3
+      },
+      "body": "Sprayer needed a bit of calibration but support team walked me through it on the phone. Good outcome.",
+      "status": "pending",
+      "comments": []
+    }
+  ]
+}

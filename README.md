@@ -1,57 +1,16 @@
-# Shelton Tool Hire Prototype
+# React + Vite
 
-A prototype review portal and rental calculator for a tool-hire business. It includes:
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-- Searchable tool catalog by category and keywords.
-- Tool detail pages with hourly/daily/weekly hire pricing.
-- Rental cost calculator for a proposed rental period.
-- Review submission for performance, customer service, support, after sales, and miscellaneous categories.
-- Review moderation flow with admin approval before publication.
-- Review comments and company responses.
-- Admin portal for pending review moderation and tool management.
+Currently, two official plugins are available:
 
-## Getting started
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+## React Compiler
 
-2. Start the app:
-   ```bash
-   npm start
-   ```
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-3. Open the portal in your browser:
-   - Customer portal: `http://localhost:4000`
-   - Admin portal: `http://localhost:4000/admin.html`
+## Expanding the ESLint configuration
 
-## Design decisions
-
-- Categories are based on typical rental segments: Building & Construction, Cleaning, Decorating, Landscaping, Electrical & Heating, Plumbing.
-- Reviews are stored with rating subcategories and require admin approval before they appear publicly.
-- The cost calculator compares hourly, daily and weekly pricing to help customers choose the best duration.
-- The admin portal supports moderation and tool pricing updates without changing the front-end customer experience.
-
-## API endpoints
-
-- `GET /api/categories`
-- `GET /api/tools?q=&category=`
-- `GET /api/tools/:id`
-- `POST /api/reviews`
-- `POST /api/reviews/:reviewId/comments`
-- `POST /api/reviews/:reviewId/response`
-- `POST /api/calculate`
-- `GET /api/admin/reviews`
-- `POST /api/admin/reviews/:reviewId/approve`
-- `GET /api/admin/tools`
-- `POST /api/admin/tools`
-- `PUT /api/admin/tools/:id`
-
-## Testing
-
-Run unit tests with:
-
-```bash
-npm test
-```
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
