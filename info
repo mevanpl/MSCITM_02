@@ -6,3 +6,7 @@ API doceument: http://localhost:3001/api-docs
 
 Username: admin@shelton.lk
 Password: Shelton@123
+
+
+npm.cmd run api
+npm.cmd run dev

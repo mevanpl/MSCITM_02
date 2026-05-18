@@ -2,8 +2,9 @@ const http = require("node:http");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
-const PORT = process.env.API_PORT || 3001;
+const PORT = process.env.PORT || process.env.API_PORT || 3001;
 const DB_PATH = path.join(__dirname, "db.json");
+const DIST_PATH = path.join(__dirname, "dist");
 
 const openApiSpec = {
   openapi: "3.0.3",
@@ -396,6 +397,45 @@ function sendHtml(res, status, html) {
   res.end(html);
 }
 
+function contentType(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  return {
+    ".css": "text/css; charset=utf-8",
+    ".html": "text/html; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".png": "image/png",
+    ".svg": "image/svg+xml",
+    ".webp": "image/webp",
+  }[ext] || "application/octet-stream";
+}
+
+async function sendStatic(req, res) {
+  if (req.method !== "GET" && req.method !== "HEAD") return false;
+
+  const requestPath = decodeURIComponent(new URL(req.url, `http://${req.headers.host}`).pathname);
+  const normalizedPath = path.normalize(requestPath).replace(/^(\.\.[/\\])+/, "");
+  const requestedFile = path.join(DIST_PATH, normalizedPath === path.sep ? "index.html" : normalizedPath);
+  const filePath = requestedFile.startsWith(DIST_PATH) ? requestedFile : path.join(DIST_PATH, "index.html");
+
+  try {
+    const file = await fs.readFile(filePath);
+    res.writeHead(200, { "Content-Type": contentType(filePath) });
+    if (req.method === "HEAD") return res.end();
+    res.end(file);
+    return true;
+  } catch {
+    try {
+      const index = await fs.readFile(path.join(DIST_PATH, "index.html"));
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(index);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}
+
 function notFound(res) {
   send(res, 404, { error: "Not found" });
 }
@@ -425,7 +465,10 @@ const server = http.createServer(async (req, res) => {
       return sendHtml(res, 200, swaggerHtml());
     }
 
-    if (parts[0] !== "api") return notFound(res);
+    if (parts[0] !== "api") {
+      if (await sendStatic(req, res)) return;
+      return notFound(res);
+    }
 
     if (req.method === "GET" && parts[1] === "data" && parts.length === 2) {
       return send(res, 200, await readDb());
