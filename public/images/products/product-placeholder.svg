@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" role="img" aria-label="Product image placeholder">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#eef4ff"/>
+      <stop offset="1" stop-color="#f8fafc"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="560" fill="url(#bg)"/>
+  <rect x="86" y="90" width="628" height="380" rx="30" fill="#ffffff" stroke="#d8e0ee" stroke-width="3"/>
+  <rect x="146" y="146" width="236" height="178" rx="18" fill="#dbeafe"/>
+  <path d="M166 292l68-72 50 50 32-36 46 58z" fill="#234a91" opacity=".82"/>
+  <circle cx="322" cy="190" r="28" fill="#f4c400"/>
+  <rect x="430" y="160" width="210" height="22" rx="11" fill="#234a91" opacity=".9"/>
+  <rect x="430" y="208" width="170" height="18" rx="9" fill="#94a3b8" opacity=".8"/>
+  <rect x="430" y="246" width="230" height="18" rx="9" fill="#cbd5e1"/>
+  <rect x="430" y="284" width="130" height="18" rx="9" fill="#cbd5e1"/>
+  <text x="400" y="402" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="800" fill="#234a91">Shelton Tool-Hire</text>
+  <text x="400" y="438" text-anchor="middle" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" fill="#64748b">Add product images in public/images/products</text>
+</svg>

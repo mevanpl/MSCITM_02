@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Category image placeholder">
+  <rect width="120" height="120" rx="24" fill="#eaf2ff"/>
+  <rect x="28" y="30" width="64" height="46" rx="10" fill="#ffffff" stroke="#b8c7df" stroke-width="3"/>
+  <path d="M38 68l16-17 13 13 9-10 16 14z" fill="#234a91" opacity=".82"/>
+  <circle cx="76" cy="44" r="7" fill="#f4c400"/>
+  <rect x="34" y="84" width="52" height="8" rx="4" fill="#234a91" opacity=".35"/>
+</svg>
