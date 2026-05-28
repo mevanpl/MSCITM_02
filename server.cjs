@@ -272,6 +272,7 @@ const openApiSpec = {
           hourly: { type: "number", example: 8.5 },
           daily: { type: "number", example: 32 },
           weekly: { type: "number", example: 95 },
+          securityDeposit: { type: "number", example: 5000 },
           desc: { type: "string", example: "Heavy-duty electric concrete mixer." },
           specs: { type: "array", items: { type: "string" }, example: ["130L drum capacity", "550W motor"] },
         },
@@ -286,6 +287,7 @@ const openApiSpec = {
           hourly: { type: "number" },
           daily: { type: "number" },
           weekly: { type: "number" },
+          securityDeposit: { type: "number" },
           desc: { type: "string" },
           specs: { type: "array", items: { type: "string" } },
         },
@@ -605,6 +607,7 @@ const server = http.createServer(async (req, res) => {
         hourly: Number(body.hourly) || 0,
         daily: Number(body.daily) || 0,
         weekly: Number(body.weekly) || 0,
+        securityDeposit: Number.isNaN(Number(body.securityDeposit)) ? 1000 : Number(body.securityDeposit),
         desc: String(body.desc || "").trim(),
         specs: Array.isArray(body.specs) ? body.specs : [],
       };
@@ -626,7 +629,7 @@ const server = http.createServer(async (req, res) => {
       for (const field of ["name", "brand", "category", "desc", "img"]) {
         if (body[field] !== undefined) tool[field] = body[field];
       }
-      for (const field of ["hourly", "daily", "weekly"]) {
+      for (const field of ["hourly", "daily", "weekly", "securityDeposit"]) {
         if (body[field] !== undefined && !Number.isNaN(Number(body[field]))) {
           tool[field] = Number(body[field]);
         }

@@ -50,6 +50,10 @@ function calcCost(tool, start, end) {
   return { amount: tool.weekly * Math.ceil(weeks), label: `${Math.ceil(weeks)} week(s) @ LKR ${tool.weekly}/wk` };
 }
 
+function formatMoney(value) {
+  return `LKR ${(Number(value) || 0).toLocaleString("en-LK", { maximumFractionDigits: 2 })}`;
+}
+
 function Stars({ rating, size = 16, interactive = false, onRate }) {
   return (
     <span style={{ display: "inline-flex", gap: 2 }}>
@@ -138,6 +142,10 @@ function ToolCard({ tool, categories, reviews, onSelect }) {
           <PriceBox label="/ day" value={tool.daily} color="#2e7d32" bg="#f0fff4" />
           <PriceBox label="/ week" value={tool.weekly} color="#e65100" bg="#fff8f0" />
         </div>
+        <div style={{ alignItems: "center", background: "#f8fafc", border: "1px solid #e5e7eb", borderRadius: 8, color: "#475569", display: "flex", fontSize: 12, justifyContent: "space-between", marginTop: 10, padding: "8px 10px" }}>
+          <span>Security deposit</span>
+          <strong style={{ color: "#1f2937", fontWeight: 500 }}>{formatMoney(tool.securityDeposit)}</strong>
+        </div>
       </div>
     </button>
   );
@@ -146,7 +154,7 @@ function ToolCard({ tool, categories, reviews, onSelect }) {
 function PriceBox({ label, value, color, bg }) {
   return (
     <div style={{ background: bg, borderRadius: 8, padding: "6px 8px", textAlign: "center" }}>
-      <div style={{ color, fontWeight: 500 }}>LKR {value}</div>
+      <div style={{ color, fontWeight: 500 }}>{formatMoney(value)}</div>
       <div style={{ color: "#8a94a6", fontSize: 11 }}>{label}</div>
     </div>
   );
@@ -309,7 +317,7 @@ function ReviewCard({ review, tools, isAdmin, onApprove, onReject, onComment, on
   );
 }
 
-function ToolDetail({ tool, categories, reviews, onBack, onSubmitReview, onComment }) {
+function ToolDetail({ tool, categories, reviews, onBack, onSubmitReview, onComment, onBook }) {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -365,6 +373,11 @@ function ToolDetail({ tool, categories, reviews, onBack, onSubmitReview, onComme
             <div style={{ color: "#a0a8b5", fontSize: 13, marginBottom: 16 }}>No reviews yet. Be the first.</div>
           )}
           <p style={{ color: "#444", fontSize: 14, lineHeight: 1.7, marginBottom: 20 }}>{tool.desc}</p>
+          <div style={{ background: "#fff", border: "1.5px solid #dfe4ec", borderRadius: 12, marginBottom: 16, padding: 16 }}>
+            <div style={{ color: "#64748b", fontSize: 12, marginBottom: 4 }}>Security deposit</div>
+            <div style={{ color: "#1f2937", fontSize: 28, fontWeight: 500 }}>{formatMoney(tool.securityDeposit)}</div>
+            <div style={{ color: "#8a94a6", fontSize: 12, marginTop: 4 }}>This amount is collected on booking and shown on the payment page.</div>
+          </div>
           <div style={{ background: "#f8f9ff", border: "1.5px solid #e0e5ff", borderRadius: 12, marginBottom: 20, padding: 18 }}>
             <div style={{ color: "#1f2937", fontSize: 15, fontWeight: 500, marginBottom: 12 }}>Estimate Hire Cost</div>
             <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr", marginBottom: 14 }}>
@@ -374,13 +387,14 @@ function ToolDetail({ tool, categories, reviews, onBack, onSubmitReview, onComme
             {cost ? (
               <div style={{ background: "#fff", border: "1.5px solid #ffe0b2", borderRadius: 10, padding: "14px 16px", textAlign: "center" }}>
                 <div style={{ color: "#8a94a6", fontSize: 12, marginBottom: 4 }}>{cost.label}</div>
-                <div style={{ color: "#e65100", fontSize: 32, fontWeight: 500 }}>LKR {cost.amount.toFixed(2)}</div>
+                <div style={{ color: "#e65100", fontSize: 32, fontWeight: 500 }}>{formatMoney(cost.amount)}</div>
                 <div style={{ color: "#a0a8b5", fontSize: 11, marginTop: 4 }}>Estimated hire cost excluding VAT</div>
               </div>
             ) : start && end ? (
               <div style={{ color: "#c0392b", fontSize: 13, padding: 8 }}>Please check your dates. End must be after start.</div>
             ) : null}
           </div>
+          <button onClick={() => onBook({ tool, start, end, cost })} style={{ ...buttonStyle("#2e7d32", "#fff"), fontSize: 15, padding: "13px 22px", width: "100%" }}>Book Product</button>
         </div>
       </div>
 
@@ -414,8 +428,62 @@ function ToolDetail({ tool, categories, reviews, onBack, onSubmitReview, onComme
   );
 }
 
+function PaymentPage({ booking, onBack, onDone }) {
+  const [form, setForm] = useState({ name: "", email: "", card: "", expiry: "", cvv: "" });
+  const deposit = Number(booking.tool.securityDeposit) || 0;
+
+  function submitPayment(event) {
+    event.preventDefault();
+    onDone();
+  }
+
+  return (
+    <div>
+      <button onClick={onBack} style={{ background: "none", border: "none", color: "#5c6bc0", cursor: "pointer", fontSize: 14, fontWeight: 500, marginBottom: 20, padding: 0 }}>Back to product</button>
+      <div style={{ display: "grid", gap: 24, gridTemplateColumns: "minmax(280px, 1fr) minmax(300px, 420px)" }}>
+        <form onSubmit={submitPayment} style={{ background: "#fff", border: "1px solid #dfe4ec", borderRadius: 14, padding: 24 }}>
+          <h2 style={{ color: "#1f2937", fontSize: 24, fontWeight: 500, margin: "0 0 6px" }}>Payment</h2>
+          <p style={{ color: "#64748b", fontSize: 14, margin: "0 0 20px" }}>Enter payment details to complete this booking.</p>
+          <label style={labelStyle}>Customer name<input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={inputStyle} /></label>
+          <label style={{ ...labelStyle, display: "block", marginTop: 14 }}>Email<input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} /></label>
+          <label style={{ ...labelStyle, display: "block", marginTop: 14 }}>Card number<input required inputMode="numeric" placeholder="4242 4242 4242 4242" value={form.card} onChange={(e) => setForm({ ...form, card: e.target.value })} style={inputStyle} /></label>
+          <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr", marginTop: 14 }}>
+            <label style={labelStyle}>Expiry<input required placeholder="12/30" value={form.expiry} onChange={(e) => setForm({ ...form, expiry: e.target.value })} style={inputStyle} /></label>
+            <label style={labelStyle}>CVV<input required inputMode="numeric" placeholder="123" value={form.cvv} onChange={(e) => setForm({ ...form, cvv: e.target.value })} style={inputStyle} /></label>
+          </div>
+          <button type="submit" style={{ ...buttonStyle("#2e7d32", "#fff"), fontSize: 15, marginTop: 20, padding: "12px 18px", width: "100%" }}>Pay Security Deposit</button>
+        </form>
+
+        <aside style={{ background: "#f8fafc", border: "1px solid #dfe4ec", borderRadius: 14, padding: 20 }}>
+          <div style={{ color: "#64748b", fontSize: 12, marginBottom: 4 }}>Booking summary</div>
+          <h3 style={{ color: "#1f2937", fontSize: 20, fontWeight: 500, margin: "0 0 4px" }}>{booking.tool.name}</h3>
+          <div style={{ color: "#8a94a6", fontSize: 13, marginBottom: 18 }}>{booking.tool.brand}</div>
+          <div style={{ display: "grid", gap: 10 }}>
+            <SummaryRow label="Start" value={booking.start ? new Date(booking.start).toLocaleString() : "Not selected"} />
+            <SummaryRow label="End" value={booking.end ? new Date(booking.end).toLocaleString() : "Not selected"} />
+            <SummaryRow label="Hire estimate" value={booking.cost ? formatMoney(booking.cost.amount) : "Not calculated"} />
+          </div>
+          <div style={{ borderTop: "1px solid #dfe4ec", marginTop: 18, paddingTop: 18 }}>
+            <SummaryRow label="Security deposit due" value={formatMoney(deposit)} strong />
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+function SummaryRow({ label, value, strong = false }) {
+  return (
+    <div style={{ alignItems: "center", display: "flex", gap: 12, justifyContent: "space-between" }}>
+      <span style={{ color: "#64748b", fontSize: 13 }}>{label}</span>
+      <span style={{ color: strong ? "#1f2937" : "#334155", fontSize: strong ? 20 : 13, fontWeight: strong ? 500 : 400, textAlign: "right" }}>{value}</span>
+    </div>
+  );
+}
+
 function CustomerPortal({ categories, tools, reviews, catFilter, onCategoryChange, onSubmitReview, onComment }) {
   const [selectedTool, setSelectedTool] = useState(null);
+  const [booking, setBooking] = useState(null);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const approvedCount = reviews.filter((review) => review.status === "approved").length;
@@ -434,9 +502,13 @@ function CustomerPortal({ categories, tools, reviews, catFilter, onCategoryChang
     return result;
   }, [tools, catFilter, search, sortBy, reviews]);
 
+  if (booking) {
+    return <PaymentPage booking={booking} onBack={() => setBooking(null)} onDone={() => { setBooking(null); setSelectedTool(null); }} />;
+  }
+
   if (selectedTool) {
     const currentTool = tools.find((tool) => tool.id === selectedTool.id) || selectedTool;
-    return <ToolDetail tool={currentTool} categories={categories} reviews={reviews} onBack={() => setSelectedTool(null)} onSubmitReview={onSubmitReview} onComment={onComment} />;
+    return <ToolDetail tool={currentTool} categories={categories} reviews={reviews} onBack={() => setSelectedTool(null)} onSubmitReview={onSubmitReview} onComment={onComment} onBook={setBooking} />;
   }
 
   return (
@@ -472,7 +544,7 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onUpdateR
   const [tab, setTab] = useState("reviews");
   const [editTool, setEditTool] = useState(null);
   const [editForm, setEditForm] = useState(null);
-  const [addForm, setAddForm] = useState({ name: "", brand: "", category: "building", hourly: "", daily: "", weekly: "", img: "", desc: "" });
+  const [addForm, setAddForm] = useState({ name: "", brand: "", category: "building", hourly: "", daily: "", weekly: "", securityDeposit: "1000", img: "", desc: "" });
   const [categoryForm, setCategoryForm] = useState({ label: "", icon: "", img: "" });
   const [editCategoryId, setEditCategoryId] = useState(null);
   const [editCategoryForm, setEditCategoryForm] = useState(null);
@@ -486,10 +558,11 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onUpdateR
       hourly: parseFloat(addForm.hourly) || 0,
       daily: parseFloat(addForm.daily) || 0,
       weekly: parseFloat(addForm.weekly) || 0,
+      securityDeposit: parseFloat(addForm.securityDeposit) || 0,
       img: addForm.img.trim() || "/images/products/product-placeholder.svg",
       specs: [],
     });
-    setAddForm({ name: "", brand: "", category: "building", hourly: "", daily: "", weekly: "", img: "", desc: "" });
+    setAddForm({ name: "", brand: "", category: "building", hourly: "", daily: "", weekly: "", securityDeposit: "1000", img: "", desc: "" });
   }
 
   async function addCategory() {
@@ -540,6 +613,7 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onUpdateR
       hourly: String(tool.hourly ?? ""),
       daily: String(tool.daily ?? ""),
       weekly: String(tool.weekly ?? ""),
+      securityDeposit: String(tool.securityDeposit ?? ""),
       img: tool.img || "",
       desc: tool.desc || "",
       specs: (tool.specs || []).join("\n"),
@@ -555,6 +629,7 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onUpdateR
       hourly: parseFloat(editForm.hourly) || 0,
       daily: parseFloat(editForm.daily) || 0,
       weekly: parseFloat(editForm.weekly) || 0,
+      securityDeposit: parseFloat(editForm.securityDeposit) || 0,
       img: editForm.img.trim() || "/images/products/product-placeholder.svg",
       desc: editForm.desc.trim(),
       specs: editForm.specs.split("\n").map((item) => item.trim()).filter(Boolean),
@@ -662,6 +737,7 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onUpdateR
                   <div>
                   <div style={{ color: "#1f2937", fontWeight: 500 }}>{tool.name}</div>
                   <div style={{ color: "#8a94a6", fontSize: 12 }}>{tool.brand} - {categories.find((c) => c.id === tool.category)?.label}</div>
+                  <div style={{ color: "#64748b", fontSize: 12, marginTop: 2 }}>Security deposit: {formatMoney(tool.securityDeposit)}</div>
                   </div>
                 </div>
                 <button onClick={() => openEditTool(tool)} style={buttonStyle("#e3f2fd", "#1565c0")}>{editTool === tool.id ? "Close" : "Edit Equipment"}</button>
@@ -674,10 +750,10 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onUpdateR
                     <label style={labelStyle}>Category<select value={editForm.category} onChange={(e) => setEditForm({ ...editForm, category: e.target.value })} style={inputStyle}>{categories.map((category) => <option key={category.id} value={category.id}>{category.label}</option>)}</select></label>
                     <label style={labelStyle}>Image path<input value={editForm.img} onChange={(e) => setEditForm({ ...editForm, img: e.target.value })} placeholder="/images/products/my-tool.jpg" style={inputStyle} /></label>
                   </div>
-                  <div style={{ display: "grid", gap: 14, gridTemplateColumns: "1fr 1fr 1fr" }}>
-                    {["hourly", "daily", "weekly"].map((field) => (
+                  <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}>
+                    {["hourly", "daily", "weekly", "securityDeposit"].map((field) => (
                       <label key={field} style={{ ...labelStyle, textTransform: "capitalize" }}>
-                        {field} LKR
+                        {field === "securityDeposit" ? "Security deposit LKR" : `${field} LKR`}
                         <input type="number" step="0.5" value={editForm[field]} onChange={(e) => setEditForm({ ...editForm, [field]: e.target.value })} style={inputStyle} />
                       </label>
                     ))}
@@ -703,8 +779,8 @@ function AdminPanel({ categories, tools, reviews, onApprove, onReject, onUpdateR
             <label style={labelStyle}>Brand<input value={addForm.brand} onChange={(e) => setAddForm({ ...addForm, brand: e.target.value })} style={inputStyle} /></label>
             <label style={labelStyle}>Category<select value={addForm.category} onChange={(e) => setAddForm({ ...addForm, category: e.target.value })} style={inputStyle}>{categories.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}</select></label>
             <label style={labelStyle}>Image path<input value={addForm.img} onChange={(e) => setAddForm({ ...addForm, img: e.target.value })} placeholder="/images/products/my-tool.jpg" style={inputStyle} /></label>
-            <div style={{ display: "grid", gap: 8, gridTemplateColumns: "1fr 1fr 1fr" }}>
-              {["hourly", "daily", "weekly"].map((field) => <label key={field} style={labelStyle}>{field} LKR<input type="number" value={addForm[field]} onChange={(e) => setAddForm({ ...addForm, [field]: e.target.value })} style={inputStyle} /></label>)}
+            <div style={{ display: "grid", gap: 8, gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}>
+              {["hourly", "daily", "weekly", "securityDeposit"].map((field) => <label key={field} style={labelStyle}>{field === "securityDeposit" ? "Security deposit LKR" : `${field} LKR`}<input type="number" value={addForm[field]} onChange={(e) => setAddForm({ ...addForm, [field]: e.target.value })} style={inputStyle} /></label>)}
             </div>
           </div>
           <label style={labelStyle}>Description<textarea value={addForm.desc} onChange={(e) => setAddForm({ ...addForm, desc: e.target.value })} rows={3} style={inputStyle} /></label>

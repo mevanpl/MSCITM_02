@@ -59,6 +59,7 @@
       "hourly": 1200,
       "daily": 5500,
       "weekly": 12000,
+      "securityDeposit": 11000,
       "desc": "Heavy-duty 130L drum electric concrete mixer. Suitable for large concrete, mortar, and screed mixes. Comes with cleaning kit.",
       "specs": [
         "130L drum capacity",
@@ -77,6 +78,7 @@
       "hourly": 12,
       "daily": 45,
       "weekly": 130,
+      "securityDeposit": 1000,
       "desc": "Aluminium mobile scaffold tower, working height 5m. Quick-lock system with stabilisers. Complies with EN 1004 standard.",
       "specs": [
         "Working height: 5m",
@@ -95,6 +97,7 @@
       "hourly": 9,
       "daily": 28,
       "weekly": 80,
+      "securityDeposit": 1000,
       "desc": "Professional grade 200 bar cold water pressure washer. Ideal for driveways, patios, vehicles, and industrial cleaning.",
       "specs": [
         "200 bar pressure",
@@ -113,6 +116,7 @@
       "hourly": 22,
       "daily": 75,
       "weekly": 210,
+      "securityDeposit": 1000,
       "desc": "Battery-powered ride-on floor scrubber. 80cm path, ideal for large commercial floors. Full day on single charge.",
       "specs": [
         "80cm scrub path",
@@ -128,9 +132,10 @@
       "name": "Airless Paint Sprayer",
       "brand": "Graco",
       "img": "/images/products/Airless Paint Sprayer.jpg",
-      "hourly": 7,
-      "daily": 25,
-      "weekly": 70,
+      "hourly": 500,
+      "daily": 5000,
+      "weekly": 35000,
+      "securityDeposit": 25000,
       "desc": "Professional airless sprayer for interior/exterior use. Suitable for latex, enamels and varnishes up to 100% unthinned.",
       "specs": [
         "3300 PSI",
@@ -149,6 +154,7 @@
       "hourly": 4.5,
       "daily": 14,
       "weekly": 38,
+      "securityDeposit": 1000,
       "desc": "Electric steam wallpaper stripper with large 4L tank. Reduces stripping time by up to 50% versus chemical methods.",
       "specs": [
         "4L tank",
@@ -167,6 +173,7 @@
       "hourly": 18,
       "daily": 65,
       "weekly": 190,
+      "securityDeposit": 1000,
       "desc": "42 inch ride-on mower, ideal for lawns up to 2 acres. Hydrostatic transmission, 6-speed, electric start.",
       "specs": [
         "107cm cut",
@@ -185,6 +192,7 @@
       "hourly": 25,
       "daily": 90,
       "weekly": 260,
+      "securityDeposit": 1000,
       "desc": "Petrol stump grinder removes stumps up to 250mm diameter. Self-propelled with remote control operation.",
       "specs": [
         "13HP engine",
@@ -203,6 +211,7 @@
       "hourly": 10,
       "daily": 38,
       "weekly": 110,
+      "securityDeposit": 1000,
       "desc": "Honda 7kVA professional site generator. Electric start, 110V/230V outputs. Long run fuel tank for full day operation.",
       "specs": [
         "7kVA output",
@@ -221,6 +230,7 @@
       "hourly": 5,
       "daily": 18,
       "weekly": 48,
+      "securityDeposit": 1000,
       "desc": "Commercial infrared space heater 3kW. Instant heat, no warm-up time. Safe for indoor and outdoor use.",
       "specs": [
         "3kW output",
@@ -239,6 +249,7 @@
       "hourly": 8,
       "daily": 28,
       "weekly": 78,
+      "securityDeposit": 1000,
       "desc": "Electric drain cleaning machine with 22m cable. Clears blockages in pipes 40-100mm. Reversible rotation.",
       "specs": [
         "22m cable",
@@ -257,6 +268,7 @@
       "hourly": 35,
       "daily": 120,
       "weekly": 350,
+      "securityDeposit": 1000,
       "desc": "Self-propelled electric cherry picker 12m working height. Narrow width for indoor/outdoor access. Zero emissions.",
       "specs": [
         "12m working height",
@@ -275,6 +287,7 @@
       "hourly": 40,
       "daily": 145,
       "weekly": 420,
+      "securityDeposit": 1000,
       "desc": "1.5 tonne mini excavator with full 360 degree rotation. Zero tail swing, ideal for confined site work. Rubber tracks.",
       "specs": [
         "1.5T operating weight",
